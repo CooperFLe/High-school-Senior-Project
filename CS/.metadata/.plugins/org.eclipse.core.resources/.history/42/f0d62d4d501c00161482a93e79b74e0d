@@ -1,0 +1,27 @@
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class Manager {
+
+	public static void main(String[] args)
+	{
+		new ManageGUI();
+	}
+
+}
+
+class ManageGUI extends JFrame
+{
+	public ManageGUI()
+	{
+		setContentPane(new CPanel());
+	}
+	
+	class CPanel extends JPanel
+	{
+		public CPanel()
+		{
+			
+		}
+	}
+}
