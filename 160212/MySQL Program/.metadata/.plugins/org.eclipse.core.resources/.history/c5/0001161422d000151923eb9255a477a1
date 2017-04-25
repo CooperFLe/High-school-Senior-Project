@@ -1,0 +1,21 @@
+import java.sql.*;
+
+public class Driver {
+
+	public static void main(String[] args) {
+		try{
+			Connection conn = DriverManager.getConnection("jdbc:mysql://10.111.53.160:3306/temp","Koopa","thykoopa")
+			Statement myst = conn.createStatement();
+			ResultSet myrs = myst.executeQuery("select * from class");
+			while(myrs.next())
+			{
+				System.out.println(myrs.getString("name") + ", " + myrs.getString("level"));
+			}
+		}
+		catch(Exception e){
+			System.out.println("Error: " + e);
+		}
+
+	}
+
+}

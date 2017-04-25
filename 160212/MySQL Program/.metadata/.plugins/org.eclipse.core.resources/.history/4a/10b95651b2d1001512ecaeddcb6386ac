@@ -1,0 +1,19 @@
+import java.sql.*;
+import javax.net.ssl.*;
+public class Driver {
+
+	public static void main(String[] args) {
+		try{
+			Connection conn = DriverManager.getConnection("jdbc:mysql://10.111.53.160:3306/temp","koopa","thykoopa");
+			Statement statement = conn.createStatement();
+			ResultSet result = statement.executeQuery("select * from class");
+			while(result.next())
+			{
+				System.out.println(result.getString("name") + ", " + result.getString("level"));
+			}
+		}
+		catch(Exception e){
+			System.out.println("Error: " + e);
+		}
+	}
+}
