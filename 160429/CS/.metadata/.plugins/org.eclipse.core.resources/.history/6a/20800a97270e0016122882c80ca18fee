@@ -1,0 +1,8 @@
+public class PayoutLayout extends Layout{
+
+	public PayoutLayout()
+	{
+		
+	}
+
+}

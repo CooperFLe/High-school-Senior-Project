@@ -1,0 +1,12 @@
+I made decent progress in my program. After talking to the office manager, I finally
+got a list of employees and their email address. Then I set up the database for testing
+purposes on my laptop. The timer is now working. The program will record the time they
+started and write to the database when they clock out with the clock in time and the 
+clock out time. MySQL then will automatically generate a timestamp for the entry so that
+I can get the date. 
+
+My next step will be to get the pay rates for the employees and add that to the database.
+Then I will have to create a separate program for the office manager to get hours, pay rate,
+and base pay of the employees. If I complete that before the end of the week, I will then 
+make a way for the office manager to edit hourly rates and possible add calculations to 
+account for bonuses and tax.

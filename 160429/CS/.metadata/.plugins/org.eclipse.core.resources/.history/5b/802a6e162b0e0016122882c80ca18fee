@@ -1,0 +1,12 @@
+import javax.swing.JPanel;
+
+public class Layout extends JPanel{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6185241545443679551L;
+
+	
+	
+}

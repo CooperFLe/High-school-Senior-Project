@@ -1,0 +1,24 @@
+import java.sql.Statement;
+import java.util.Scanner;
+
+public class PopulateTable {
+
+	public static void main(String[] args)
+	{
+		String workers = "Nguyen LHN Carrie CD Phung PT Chau ZD Trang TL Tien TN Lam LBH Quynh QV Vy VD Nancy NL";
+		Scanner j = new Scanner(workers);
+		try {
+			while(j.hasNext())
+			{
+				Link server = new Link();
+				Statement st = server.getStatement();
+				String name = j.next();
+				String email = name.toLowerCase() + "@winningagency.com";
+				String sign = j.next();
+				st.execute("INSERT INTO users (name, email, sign) values ('" + name + "','" + email + "','" + sign + "')");
+			}
+		} catch (Exception e) {e.printStackTrace();}
+		j.close();
+	}
+
+}

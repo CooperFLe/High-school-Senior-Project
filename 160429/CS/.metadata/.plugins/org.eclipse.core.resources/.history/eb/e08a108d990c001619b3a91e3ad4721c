@@ -1,0 +1,178 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.Instant;
+import java.time.ZoneId;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import net.miginfocom.swing.MigLayout;
+
+public class Client {
+	
+	private Link 	server;
+	JFrame parent;
+	TimeLog log;
+	public Client()
+	{
+		server = new Link();
+		parent = new JFrame();
+		parent.setUndecorated(true);
+        parent.setVisible(true);
+		log = new TimeLog(parent);
+	}
+	
+	class TimeLog extends GUI
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -7737550242306410590L;
+		private TimerLayout panel;
+		private int control;
+		
+		public TimeLog(JFrame parent)
+		{
+			super(parent);
+			control = 0;
+			//setModal(true);
+			//setAlwaysOnTop(true);
+		}
+		
+		@Override
+		public void closeParent()
+		{
+			if(panel != null && panel.getState())
+			{
+				control++;
+				log.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+				if(control%2==0)
+				JOptionPane.showMessageDialog(null, "Timer still running.\nPlease clock out before closing.", "ERROR",JOptionPane.ERROR_MESSAGE);
+			}
+			else
+			{
+				parent.dispose();
+				System.exit(0);
+			}
+		}
+		
+		@Override
+		public void verifyEmail(String email)
+		{
+			System.out.println(email);
+			server.getData(email); 
+
+			if(email.equalsIgnoreCase("carrie@winningagency.com"))
+			{
+				String pass = JOptionPane.showInputDialog(null, "Verify yourself, please");
+				if(pass.equalsIgnoreCase("verified"))
+				{
+					JOptionPane.showOptionDialog(null, "Do you want to check hours?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,null,null);
+				}
+				else
+			   		JOptionPane.showMessageDialog(null, "Invalid phrase", "ERROR",JOptionPane.ERROR_MESSAGE);
+					
+			}
+			else
+		   	if(server.getUserDB().equals("usererror"))
+		   		JOptionPane.showMessageDialog(null, "Incorrect email", "ERROR",JOptionPane.ERROR_MESSAGE);
+	   		else			
+	   			if(server.getUserDB().equals("user1"))
+	   		   		JOptionPane.showMessageDialog(null, "Please enter your email", "ERROR",JOptionPane.ERROR_MESSAGE);
+	   			else   				
+	   				timerLayout(server.getName(), email);
+		}
+		
+		public void timerLayout(String e, String em)
+		{
+			if(e.equals("error"))
+			{
+				JOptionPane.showMessageDialog(null, "Incorrect email", "ERROR",JOptionPane.ERROR_MESSAGE);
+			}
+			else
+			{
+				panel = new TimerLayout(e, em);
+				setContentPane(panel);
+				setTitle("Time Sheet");                                                                                                          
+				pack();
+				setLocation(0,0);
+				setResizable(false);
+				setVisible(true);
+			}
+		}
+		
+		class TimerLayout extends JPanel
+		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 6911081452299105397L;
+			private JButton toggle;
+			private String startTime;
+			private boolean running;
+			private String email;
+		
+			public TimerLayout(String employee, String email)
+			{
+				this.email = email;
+				setLayout(new MigLayout("fill, wrap 2"));
+					add(new JLabel("Hello, " + employee,JLabel.CENTER), "grow, span 2");
+				toggle = new JButton("Start");
+					toggle.addActionListener(new ToggleAction());
+					add(toggle,"grow, span 2");
+				toggle();
+			}
+			
+			public boolean getState()
+			{
+				return running;
+			}
+			
+			public void toggle()
+			{
+				//TODO Insert data to table
+				String time = Instant.now().atZone(ZoneId.of("CST",ZoneId.SHORT_IDS)).toString();
+				time = time.substring(time.indexOf("T")+1, time.indexOf(".",time.indexOf("T")));
+				if(running)
+				{
+						toggle.setText("START");
+						System.out.println("OUT: " + time);
+						server.log(startTime, time);
+				}
+				else
+				{
+						toggle.setText("STOP");
+						System.out.println("IN:  " + time);
+						startTime = time;
+				}
+								
+				running = !running;
+			}
+			
+			public boolean checkEmail(String givenEmail)
+			{
+				if(email.equals(givenEmail))
+				{
+					return true;
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Incorrect email", "ERROR",JOptionPane.ERROR_MESSAGE);
+				}
+				return false;
+			}
+			
+			class ToggleAction implements ActionListener
+			{
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					if(checkEmail(JOptionPane.showInputDialog("Verify Email")))
+					toggle();
+				}				
+			}			
+		}
+	}
+}

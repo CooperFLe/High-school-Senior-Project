@@ -1,0 +1,83 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.Instant;
+import java.time.ZoneId;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import net.miginfocom.swing.MigLayout;
+
+public class TimerLayout extends Layout
+		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 6911081452299105397L;
+			private JButton toggle;
+			private String startTime;
+			private boolean running;
+			private String email;
+			private Link server;
+		
+			public TimerLayout(String employee, String email, Link server)
+			{
+				this.email = email;
+				this.server = server;
+				setLayout(new MigLayout("fill, wrap 2"));
+					add(new JLabel("Hello, " + employee,JLabel.CENTER), "grow, span 2");
+				toggle = new JButton("Start");
+					toggle.addActionListener(new ToggleAction());
+					add(toggle,"grow, span 2");
+				toggle();
+			}
+			
+			public boolean getState()
+			{
+				return running;
+			}
+			
+			public void toggle()
+			{
+				//TODO Insert data to table
+				String time = Instant.now().atZone(ZoneId.of("CST",ZoneId.SHORT_IDS)).toString();
+				time = time.substring(time.indexOf("T")+1, time.indexOf(".",time.indexOf("T")));
+				if(running)
+				{
+						toggle.setText("START");
+						System.out.println("OUT: " + time);
+						server.log(startTime, time);
+				}
+				else
+				{
+						toggle.setText("STOP");
+						System.out.println("IN:  " + time);
+						startTime = time;
+				}
+								
+				running = !running;
+			}
+			
+			public boolean checkEmail(String givenEmail)
+			{
+				if(email.equals(givenEmail))
+				{
+					return true;
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Incorrect email", "ERROR",JOptionPane.ERROR_MESSAGE);
+				}
+				return false;
+			}
+			
+			class ToggleAction implements ActionListener
+			{
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					if(checkEmail(JOptionPane.showInputDialog("Verify Email")))
+					toggle();
+				}				
+			}			
+		}

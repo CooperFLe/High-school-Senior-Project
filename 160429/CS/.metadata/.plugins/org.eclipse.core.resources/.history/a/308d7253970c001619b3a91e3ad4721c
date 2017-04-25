@@ -1,0 +1,24 @@
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Scanner;
+
+public class PopulateTable {
+
+	public static void main(String[] args)
+	{
+		try {
+		Link server = new Link();
+		Statement st = server.getStatement();
+		Scanner j = new Scanner(System.in);
+		String name = j.nextLine();
+		String email = name + "@winningagency.com";
+		String sign = j.nextLine();
+		
+			st.execute("INSERT INTO users (name, email, sign) values ('" + name + "','" + email + "','" + sign + "')");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}

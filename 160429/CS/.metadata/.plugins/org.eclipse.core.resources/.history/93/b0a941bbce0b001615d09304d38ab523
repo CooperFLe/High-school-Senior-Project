@@ -1,0 +1,66 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class Link {
+	
+	private Connection	server;
+	private Statement 	command;
+	private String		userDB, name;
+	public Link()
+	{
+		try {		
+			String ip = "127.0.0.1";
+			String port = "3306";
+			String db = "timelog";
+			String user = "java";
+			String pass = "csiv";
+			server = DriverManager.getConnection("jdbc:mysql://" + ip + ":"
+					+ port + "/" + db + "?user=" + user + "&password=" + pass +"&useSSL=false");
+			command = server.createStatement();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Connection getServer()
+	{
+		return server;
+	}
+	
+	public Statement getStatement()
+	{
+		return command;
+	}
+
+	public String getUserDB() {
+		return "data" + userDB;
+	}
+
+	public void getData(String email) {
+		try{
+			
+			ResultSet rs = command.executeQuery("SELECT name FROM id,users WHERE email='" + email + "'");
+			if(rs.next())
+			{
+				userDB = rs.getString(1);
+				name = rs.getString(2);
+			}
+			else
+			{
+				userDB = "error";
+				name = "error";
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public String getName()
+	{
+		return name;
+	}
+}

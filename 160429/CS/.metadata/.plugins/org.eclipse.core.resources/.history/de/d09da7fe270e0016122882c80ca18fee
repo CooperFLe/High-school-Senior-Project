@@ -1,0 +1,13 @@
+public class PayoutLayout extends Layout{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8144664287626906661L;
+
+	public PayoutLayout()
+	{
+		
+	}
+
+}
