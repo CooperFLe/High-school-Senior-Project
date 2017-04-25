@@ -1,0 +1,16 @@
+I completed the timelogging program. It now keeps track of when an employee logs in and logs out and inputs that data
+into a MySQL database. There is a second program that will take these times and calculate how many hours a person
+has worked rounding to the nearest half hour. It also multiplies hours worked by hourly wage. Next week, I will try
+to make the estimated monthly earning more accurate by accounting for taxes and other factors. The second program also
+needs to be improved to allow the user to input a range of days that they want for hours so that they can set it to only
+count hours between set days. 
+
+A third program was created for ease of set up that will clear out the MySQL DB and recreate all of the base tables with
+data. It could have a practical use if we would need to reset the DB for any reason. A fourth program needs to be created 
+so that someone without knowledge of MySQL commands can add or remove employees or modify their wages and any other info.
+
+A side project has grown to where I want the tracking to work through Hangouts (Google's IM service). Employees already
+send messages into there saying "(ID): [In/Out]" indicating when they arrive at work and when they leave. Hopefully, I 
+can use a FOSS Javascript program to log messages into that group chat and use the message contents/timestamp/sender to 
+keep track of employees' hours so that they don't have to remember to start and stop my program. This will be challenging
+though, and I don't anticipate that this will be completed until summer time.

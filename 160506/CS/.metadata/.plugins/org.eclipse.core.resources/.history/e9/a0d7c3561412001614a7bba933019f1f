@@ -1,0 +1,321 @@
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.time.Instant;
+import java.time.ZoneId;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+import net.miginfocom.swing.MigLayout;
+
+public class Client {
+	
+	private Link 	server;
+	JFrame parent;
+	TimeLog log;
+	public Client()
+	{
+		server = new Link();
+		parent = new JFrame();
+		parent.setUndecorated(true);
+        parent.setVisible(true);
+		log = new TimeLog(parent);
+	}
+	
+	class TimeLog extends GUI
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -7737550242306410590L;
+		private TimerLayout panel;
+		private int control;
+		
+		public TimeLog(JFrame parent)
+		{
+			super(parent);
+			control = 0;
+			//setModal(true);
+			//setAlwaysOnTop(true);
+		}
+		
+		@Override
+		public void closeParent()
+		{
+			if(panel != null && panel.getState())
+			{
+				control++;
+				log.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+				if(control%2==0)
+				JOptionPane.showMessageDialog(null, "Timer still running.\nPlease clock out before closing.", "ERROR",JOptionPane.ERROR_MESSAGE);
+			}
+			else
+			{
+				parent.dispose();
+				System.exit(0);
+			}
+		}
+		
+		@Override
+		public void verifyEmail(String email)
+		{
+			server.getData(email); 
+
+			if(email.equalsIgnoreCase("carrie@winningagency.com"))
+			{
+				
+				
+				int option = JOptionPane.showOptionDialog(null, "Do you want to check hours?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,null,null);
+				if(option == 1)
+					timerLayout(server.getName(),email);
+				else
+				{String pass = JOptionPane.showInputDialog(null, "Verify yourself, please");
+					if(pass.equalsIgnoreCase("verified"))
+						timesLayout();
+					else
+			   		JOptionPane.showMessageDialog(null, "Invalid phrase", "ERROR",JOptionPane.ERROR_MESSAGE);
+				}
+					
+			}
+			else
+		   	if(server.getUserDB().equals("usererror"))
+		   		JOptionPane.showMessageDialog(null, "Incorrect email", "ERROR",JOptionPane.ERROR_MESSAGE);
+	   		else			
+	   			if(email.equalsIgnoreCase("example@example.com"))
+	   		   		JOptionPane.showMessageDialog(null, "Please enter your email", "ERROR",JOptionPane.ERROR_MESSAGE);
+	   			else   				
+	   				timerLayout(server.getName(), email);
+		}
+		
+		public void timerLayout(String e, String em)
+		{
+			if(e.equals("error"))
+			{
+				JOptionPane.showMessageDialog(null, "Incorrect email", "ERROR",JOptionPane.ERROR_MESSAGE);
+			}
+			else
+			{
+				panel = new TimerLayout(e, em);
+				setContentPane(panel);
+				setTitle("Time Sheet");                                                                                                          
+				pack();
+				setLocation(0,0);
+				setResizable(false);
+				setVisible(true);
+			}
+		}
+		
+		public void timesLayout()
+		{
+				panel = new TimerLayout();
+				setContentPane(panel);
+				setTitle("Time Sheet");                                                                                                          
+				pack();
+				setLocation(0,0);
+				setResizable(false);
+				setVisible(true);
+		}
+		
+		class TimerLayout extends JPanel
+		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 6911081452299105397L;
+			private JButton toggle;
+			private String startTime;
+			private boolean running;
+			private String email;
+		
+			public TimerLayout(String employee, String email)
+			{
+				this.email = email;
+				setLayout(new MigLayout("fill, wrap 2"));
+					add(new JLabel("Hello, " + employee,JLabel.CENTER), "grow, span 2");
+				toggle = new JButton("Start");
+					toggle.addActionListener(new ToggleAction());
+					add(toggle,"grow, span 2");
+				toggle();
+			}
+			
+			public TimerLayout()
+			{
+				running = false;
+				JTextArea output = new JTextArea(20,30);
+				add(output);
+				output.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
+				output.setFocusable(true);
+				output.setEditable(false);
+				output.setText("| Employee | Hours | Rate | Earnings |");
+				output.append("\n|==========|=======|======|==========|");
+				pack();
+				calculateHours(output, 5);
+				setLocationRelativeTo(null);
+			}
+			
+			private void calculateHours(JTextArea output, int m)
+			{
+				//TODO calculate hours and pay
+				try{
+					
+					Statement st = server.getStatement();
+					ResultSet rs = st.executeQuery("SELECT id FROM users");
+					rs.last();
+					int max = rs.getInt(1);
+					int i = max;
+					while(i >= 1)
+					{
+						ResultSet users = st.executeQuery("SELECT * FROM users WHERE id=" + (max - i + 1));
+						if(users.next())
+						{//Get user info
+								int id = Integer.valueOf(users.getString(1));
+								String name = users.getString(4);
+								double pay = users.getDouble(5);
+								while(name.length() != 10)
+								{
+									name = name + " ";
+								}
+								output.append("\n|" + name + "|");
+						
+							ResultSet urs = st.executeQuery("SELECT * FROM user" + id + " ORDER BY dt DESC");
+							double hours = 0;
+							int mins = 0;
+							boolean stop = false;
+							while(!stop && urs.next())
+							{//Get hours
+								int min = 0;
+								int hour = 0;
+								String start = urs.getString(2);
+								String end = urs.getString(3);
+								String date = urs.getString(4).substring(0, 10);
+								int month = Integer.valueOf(date.substring(5, 7));
+								int day = Integer.valueOf(date.substring(8));
+								String year = date.substring(0,4);
+								System.out.println(start);
+								System.out.println(end);
+								System.out.println(month + "|" + day + "|" + year);
+								 if(m != month)
+									 stop = true;
+								 else
+								 {
+									 int ehour = Integer.valueOf(end.substring(0, 2));
+									 int emin = Integer.valueOf(end.substring(3, 5));
+									 int shour = Integer.valueOf(start.substring(0, 2));
+									 int smin = Integer.valueOf(start.substring(3, 5));
+									 min = emin - smin;
+									 hour = ehour - shour;
+									 System.out.println(hour + " " + min);
+									 if(min < 0)
+									 {
+										 hour = hour - 1;
+										 min = 60 + min;
+									 }
+									 System.out.println(hour + " " + min);
+									 
+									 hours += hour;
+									 mins += min;
+								 }
+							}
+							//Round to half hour
+							while(mins > 60)
+							{
+								hours++;
+								mins -= 60;
+							}
+
+							 if(mins >= 45)
+								 hours = hours + 1;
+							 else
+								 if(mins >= 15)
+									 hours += .5;
+							//Print hours
+							 String h = hours+"";
+							 int spaces = 7 - h.length();
+							 while(spaces > 0)
+							 {
+								 spaces--;
+								 output.append(" ");
+							 }
+							 output.append(h + "|");
+							 
+							//Get pay
+							 double earnings = hours * pay;
+							 spaces = 6 - (""+pay).length();
+							 while(spaces > 0)
+							 {
+								 spaces--;
+								 output.append(" ");
+							 }
+							 output.append(pay + "|");
+							 
+							 spaces = 10 - (""+earnings).length();
+							 while(spaces > 0)
+							 {
+								 spaces--;
+								 output.append(" ");
+							 }
+							 output.append(earnings + "|");
+						}
+						i--;
+						output.append("\n|----------|-------|------|----------|");
+					}
+					
+				}catch(Exception e){e.printStackTrace();}
+			}
+			
+			public boolean getState()
+			{
+				return running;
+			}
+			
+			public void toggle()
+			{
+				String time = Instant.now().atZone(ZoneId.of("CST",ZoneId.SHORT_IDS)).toString();
+				time = time.substring(time.indexOf("T")+1, time.indexOf(".",time.indexOf("T")));
+				if(running)
+				{
+						toggle.setText("START");
+						System.out.println("OUT: " + time);
+						server.log(startTime, time);
+				}
+				else
+				{
+						toggle.setText("STOP");
+						System.out.println("IN:  " + time);
+						startTime = time;
+				}
+								
+				running = !running;
+			}
+			
+			public boolean checkEmail(String givenEmail)
+			{
+				if(email.equals(givenEmail))
+				{
+					return true;
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Incorrect email", "ERROR",JOptionPane.ERROR_MESSAGE);
+				}
+				return false;
+			}
+			
+			class ToggleAction implements ActionListener
+			{
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					if(checkEmail(JOptionPane.showInputDialog("Verify Email")))
+					toggle();
+				}				
+			}			
+		}
+	}
+}
