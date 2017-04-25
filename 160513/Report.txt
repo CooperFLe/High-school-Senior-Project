@@ -1,0 +1,7 @@
+I spent all week looking through different ways to get Google Hangouts chat logs.
+Unfortunately, there is no API to access the messages. What I have to do is either
+figure out one of the Google Takeout parser that will take the json file that Google
+gives you with all of the Google Hangouts messages and convert it to stuff that I can
+actually use. Or I can figure out the Hangouts boot that is written in JavaScript and
+try to implement that. I am not having a lot of luck with figuring out what everything
+does though. I might just give up on that a work on math calculations. 
