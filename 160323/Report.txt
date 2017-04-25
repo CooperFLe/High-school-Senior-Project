@@ -1,0 +1,7 @@
+I finally uploaded my code to Github on Monday and chose an open source license. https://github.com/ThyKoopa/FinanceSQL
+Tuesday and Wednesday, I worked on implementing a way for users to upload a .csv file of their Amazon purchase history.
+I had to write my own algorithem to pharse incoming data because of the way the data is stored in the .csv. Sometimes
+there will be double quotes around items, and sometimes there wouldn't be. The double quotes would be around a single
+value that contains a comma that is part of that value. This prevents me from effectively splitting the data using commas
+or double quotes, so I had to figure out a way to do it myself. I am nearly done with that, but I still need to work out a
+few logical errors. For most cases, my current method works.

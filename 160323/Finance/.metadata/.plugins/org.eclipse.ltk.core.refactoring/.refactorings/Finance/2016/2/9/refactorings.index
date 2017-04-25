@@ -1,0 +1,7 @@
+1456333141277	Delete element
+1456336848390	Encapsulate field 'connection'
+1456336867997	Encapsulate field 'statement'
+1456336872923	Encapsulate field 'resultSet'
+1456338291251	Encapsulate field 'user'
+1456338299802	Encapsulate field 'pass'
+1456338304627	Encapsulate field 'salt'

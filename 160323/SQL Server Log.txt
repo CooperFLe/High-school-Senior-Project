@@ -1,0 +1,153 @@
+SQL Server Log
+WEEK 11
+Goal: I don't have one this week
+160321:	Removed SSL warning
+		Researched OpenSource licenses
+		Uploaded current code to Github
+160322:	Started to implement Amazon order data
+160323:	Designed own pharsing algorithm to accomedate fickle Amazon data
+
+WEEK 9
+Goal: Implemnt Categories
+160307: ArrayList created to store categories
+160308: Made it so that the categories appeared as options in JComboBox
+160309:	Added 'Add Category' option
+			Updates category options immediately
+			Updates category column in db
+160310:	Finished add entry option and functionality
+			Prevent 'null' or duplicate categories
+160311:	Created FinanceEntry class and entries ArrayList to store entry data
+
+WEEK 8
+Goal: Implement Categories
+160229:	Added JComboBox for Category selection
+		Added Category column to users table in db
+160301: ACSL
+160302: ACSL
+160303: ACSL
+160304: ACSL
+
+WEEK 7
+Goal: Create server table structure
+160220:	Update to Windows 10
+		Set up MySQL Server
+		Enable port forwarding
+			73.76.67.116:3737
+		Create users and userData tables
+		Create registration input
+		Set up password security
+		TODO: Find valid way to store salt and hashed password
+160221:	Fixed password hashing with salt
+		Converted JOptionPane to JDialogs where 'OK' button was not wanted
+		Created "Connecting to server" message popup
+		Cleaned up login and registration button actions
+		Implemented per-user table for data
+		Research Alternative Password Hashing Algorythms
+			https://www.nccgroup.trust/us/about-us/newsroom-and-events/blog/2015/march/enough-with-the-salts-updates-on-secure-password-schemes/
+			http://blog.jerryorr.com/2012/05/secure-password-storage-lots-of-donts.html
+			http://csrc.nist.gov/publications/nistpubs/800-132/nist-sp800-132.pdf
+			https://adambard.com/blog/3-wrong-ways-to-store-a-password/
+			https://password-hashing.net/
+			https://github.com/p-h-c/phc-winner-argon2
+			http://www.bolet.org/makwa/
+		TODO: Ask if having an instance of every class in the static Data class is a good idea
+				Implement if it is
+				Figure out a new way if it isn't
+160222:	Rework classes to not be a complete mess
+160223:	Still fixing classes
+		Looking at SSL again
+160224:	Rewriting program
+			GUI
+160225: Rewriting program
+			Connection
+160226: Rewriting program
+			Dialogs
+
+WEEK 6
+Goal: Create GUI for Java application
+160216:	Research using external libraries
+		TODO: Start GUI
+160217:	Create Generic GUI
+			Responsive based on screen size and window size
+		TODO: Create GUI input for connection info
+160218:	Cleaned up GUI
+		Created "Setting" frame for login details
+		TODO: Design server structure
+160219:	Set up another computer to use as a server at home
+		Increase RAM to 2GB
+		TODO: Update to Windows 10 and create MySQL server
+			
+WEEK 5
+Goal: Interact with server through a sample Java application
+160208:	Installed Connector/J
+			Attempted remote access through Java
+			Failed
+		TODO: Attempt local application first
+160209:	Installed Connector/J on localhost
+		Attempted access with Java again
+			Failed again
+		TODO: New approach time
+160210:	Tried Glassfish and Tomcat
+			Completely confused and gave up on that
+		Tried NetBeans
+			Nope. Just, nope.
+		Found YouTube guide...
+		Installed and set up MySQL Workbench
+		Installed Eclipse and got connection via Java on localhost and remote host
+		TODO: Figure out SSL connection
+160612:	Gave up on SSL for now
+			There are more important things to do right now
+		Created read-only user 'java'
+		Added login options to program to input server, database, user, and password
+		Made default values for said database
+		TODO: Create GUI
+
+WEEK 4
+Goal: Interact with sever through a sample Java application
+160201:	Set up Java development environment on new laptop
+			Using Atom and .bat files
+		Started ACSL problem
+160202:	Finished basic ACSL problem
+160203:	Added checks
+			Check for decimals
+			Check for trailing zeros
+			Check for 0 decimals
+160205:	Added final check
+			Check for string of rounding nines
+
+WEEK 3
+Goal: Get MySQL running on computer and test functionality
+160125: Fix RAM issue
+			There was a bad stick
+		TODO: Figure out why mysql.user doesn't exist
+160126:	MySQL server running as 'localhost'
+			my-default.ini file was wrong
+		Created database 'temp'
+		TODO: Fill 'temp' with data
+160127:	Created class table in temp database and filled with data
+		Set up remote access
+		TODO: Come up with application idea
+
+WEEK 2
+160119: Troubleshoot Windows 7 activation
+			It apparently wasn't activated before and update failed
+		Troubleshoot Windows 10 upgrade
+			Not enough memory
+160120:	Complete all Windows 7 update
+			Hoping that a prompt for Windows 10 will appear since .exe isn't working
+		Attempt update via bootable USB
+			Haha! Finally got Windows 10 installed
+			Windows 10 with 2GB of RAM? Why not?
+160122:	Learned about computer hardware
+		Added two 1GB sticks of RAM
+		Troubleshoot booting
+			Computer won't boot into Windows with new RAM
+
+WEEK 1
+160113: Switched to SQL to help Joan
+		Set up computer
+160115: Install Windows 7
+		Discuss MySQL v SQL Server
+			Going with MySQL
+		Updating to Windows 10
+		Install IIS
