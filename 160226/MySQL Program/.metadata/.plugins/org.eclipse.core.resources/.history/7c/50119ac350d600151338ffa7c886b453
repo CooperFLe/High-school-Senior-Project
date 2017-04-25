@@ -1,0 +1,19 @@
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+public class InputDialog 
+{
+	public InputDialog()
+	  {
+		
+	  }
+	
+	public String getResponse(String prompt)
+	{
+
+	    // a jframe here isn't strictly necessary, but it makes the example a little more real
+	    JFrame frame = new JFrame("InputDialog Example #1");
+	    return JOptionPane.showInputDialog(frame, prompt);
+	    
+	}
+}

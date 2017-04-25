@@ -1,0 +1,19 @@
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+
+import javax.swing.JOptionPane;
+
+public class Tester {
+
+	public static void main(String[] args)
+	{
+		String[] buttons = { "Yes", "Yes to all", "No", "Cancel" };
+
+	    int rc = JOptionPane.showOptionDialog(null, "Question ?", "Confirmation",
+	        JOptionPane.WARNING_MESSAGE, 0, null, buttons, buttons[2]);
+
+	    System.out.println(rc);
+	}
+}

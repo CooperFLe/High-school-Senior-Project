@@ -1,0 +1,187 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import net.miginfocom.swing.MigLayout;
+
+public class GUI {
+	private int	view;
+	private JDialog 	userInput;
+	private JFrame 		frame;
+	private JPanel 		panel;
+	private JTextArea 	output;
+	private Dimension 	screen;
+	private JTextField		input;
+	private JPasswordField	secretInput;
+	
+	public GUI()
+	{
+		screen = Toolkit.getDefaultToolkit().getScreenSize();
+		setDialog();
+		setPanel();
+		setFrame();
+	}
+	
+	private void setDialog()
+	{
+		userInput = new JDialog();
+		userInput.setSize(175,150);
+		userInput.setLayout(new MigLayout("fill, wrap 3"));
+		userInput.add(new JLabel("Username", SwingConstants.RIGHT),"grow, align right");
+		input = new JTextField();
+		userInput.add(input, "grow, align center");
+		userInput.add(new JLabel("Password", SwingConstants.RIGHT),"grow, align right");
+		secretInput = new JPasswordField();
+		userInput.add(secretInput, "grow, align center");
+		JButton register = new JButton("Register");
+			register.addActionListener(new ActionRegister());
+		userInput.add(register, "grow, align center");
+		JButton confirm = new JButton("Register");
+			confirm.addActionListener(new ActionConfirm());
+		userInput.add(confirm, "grow, align center");
+	}
+	
+	class ActionRegister implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+		}
+	}
+	
+	class ActionConfirm implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+		}		
+	}
+	
+	private void setFrame()
+	{
+		frame = new JFrame();
+		frame.setSize((int)screen.getWidth()/2, (int)screen.getHeight()/2);
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(3);
+		frame.setContentPane(panel);
+		frame.setVisible(true);
+	}
+	
+	private void setPanel()
+	{
+		panel = new JPanel(new MigLayout("fill,wrap 4"));
+		panel.setBackground(new Color(125,140,115));
+		output = new JTextArea();
+			output.setSize((int)screen.getWidth()/2, (int)screen.getHeight()/2);
+			output.setEditable(false);
+			output.setFocusable(false);
+			output.setFont(new java.awt.Font("DialogInput",0,12));
+		JScrollPane scrollPane = new JScrollPane(output);
+			scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		panel.add(scrollPane, "grow,span 4 9");
+		
+		JButton buttonOne = new JButton();
+			buttonOne.setText("Add Entry");
+			buttonOne.addActionListener(new ActionOne());
+		panel.add(buttonOne, "grow");
+		
+		JButton buttonTwo = new JButton();
+			buttonTwo.setText("Year View");
+			buttonTwo.addActionListener(new ActionTwo());
+		panel.add(buttonTwo, "grow");
+	
+		JButton buttonThree = new JButton();
+			buttonThree.setText("Month View");
+			buttonThree.addActionListener(new ActionThree());
+		panel.add(buttonThree, "grow");
+
+		JButton buttonFour = new JButton();
+			buttonFour.setText("Day View");
+			buttonFour.addActionListener(new ActionFour());
+		panel.add(buttonFour, "grow");
+	}
+	
+	private void updateOutput()
+	{
+		switch(view)
+		{
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+		}
+	}
+	
+	private void setView(int viewInt){
+		view = viewInt;
+	}
+	
+	class ActionOne implements ActionListener{
+
+		JTextField item,description,cost;
+		JDialog entryWindow;
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			entryWindow = new JDialog();
+			entryWindow.setLayout(new MigLayout("fill,wrap 4"));
+			entryWindow.add(new JLabel("Item",SwingConstants.RIGHT),"align right, span 1");
+				item = new JTextField();
+				entryWindow.add(item,"grow, span 3");
+			entryWindow.add(new JLabel("Description",SwingConstants.SOUTH_EAST), "align right, span 1 4" );
+				description = new JTextField();
+				description.setMinimumSize(new Dimension(150,100));
+				entryWindow.add(description, "grow, span 3 4");
+			
+			entryWindow.pack();
+			entryWindow.setVisible(true);
+		}
+		
+	}
+	
+	class ActionTwo implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			setView(1);
+			updateOutput();
+		}
+		
+	}
+	
+	class ActionThree implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			setView(2);
+			updateOutput();
+		}
+		
+	}
+	
+	class ActionFour implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			setView(3);
+			updateOutput();
+		}
+		
+	}
+}

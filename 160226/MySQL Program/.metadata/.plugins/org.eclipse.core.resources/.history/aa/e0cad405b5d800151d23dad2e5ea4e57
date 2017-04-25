@@ -1,0 +1,170 @@
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Arrays;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import net.miginfocom.swing.MigLayout;
+
+public class User {
+	
+	private String user;
+	private String password;
+	private JTextField username;
+	private JPasswordField passwordField;
+	private JPasswordField verifyPass;
+	private JDialog panel;
+	
+	public User()
+	{}
+	
+	public User(String user, String password)
+	{
+		this.user = user;
+		this.password = password;
+	}
+	
+	public void register()
+	{
+		panel = new JDialog();
+		panel.setLayout(new MigLayout("fillx, wrap 2"));
+		panel.add(new JLabel("Username", SwingConstants.RIGHT), "align right");
+		username = new JTextField();
+		panel.add(username, "grow");
+		panel.add(new JLabel("Password", SwingConstants.RIGHT),"align right");
+		passwordField = new JPasswordField();
+		panel.add(passwordField, "grow");
+		panel.add(new JLabel("Confirm Password", SwingConstants.RIGHT),"align right");
+		verifyPass = new JPasswordField();
+		panel.add(verifyPass, "grow");
+		JButton confirm = new JButton("Confirm");
+			confirm.setSize(new Dimension((int)(panel.getSize().getWidth()/4),(int)(panel.getSize().getHeight()*.3)));
+			confirm.addActionListener( new ConfirmRegistration());
+		panel.add(confirm,"align center");
+		JButton cancel = new JButton("Cancel");
+			cancel.setSize(new Dimension((int)(panel.getSize().getWidth()/4),(int)(panel.getSize().getHeight()*.3)));
+			cancel.addActionListener( new CancelRegistration());
+		panel.add(cancel,"align center");
+		panel.setLocationRelativeTo(null);
+		panel.setSize(300,175);
+		panel.setVisible(true);
+	}
+	
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	class ConfirmRegistration implements ActionListener
+	{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(username.getText().length() > 20)
+				Popup.errorMessage("Password is longer than the 20 character limit");
+			else
+				if(!Arrays.toString(passwordField.getPassword()).equals(Arrays.toString(verifyPass.getPassword())))
+					Popup.errorMessage("Passwords do not match");
+				else
+				{
+					boolean taken = false;
+					Connection conn = new Connector().conn;
+					try{
+						Statement s = conn.createStatement();
+						ResultSet rs = s.executeQuery("SELECT user FROM users");
+						while(rs.next())
+							if(rs.getString(1).equalsIgnoreCase(username.getText()))
+							{
+								Popup.errorMessage("Username taken");
+								taken = true;
+							}
+					}catch(Exception error){
+						Popup.errorMessage(error);
+					}
+					if(!taken)
+					{
+						try{
+							Statement s = conn.createStatement();							
+							byte[] salt = PasswordEncryptionService.generateSalt();
+							byte[] encPass = PasswordEncryptionService.getEncryptedPassword(Arrays.toString(passwordField.getPassword()), 
+												new String(salt,StandardCharsets.UTF_8).getBytes(StandardCharsets.UTF_8));
+							//Test
+							String passer = new String(encPass,StandardCharsets.UTF_8);
+							String salter = new String(salt,StandardCharsets.UTF_8);
+							byte[] pa = passer.getBytes(StandardCharsets.UTF_8);
+							byte[] sa = salter.getBytes(StandardCharsets.UTF_8);
+							if(!PasswordEncryptionService.authenticate(Arrays.toString(passwordField.getPassword()),
+									pa, sa))
+								Popup.errorMessage("Sorry, please try again.");
+							else
+							{
+								s.execute("INSERT INTO users (user,password,entries,salt) VALUES ('"
+											+ username.getText() + "','" + new String(encPass,StandardCharsets.UTF_8) + "',1,'" 
+											+ new String(salt,StandardCharsets.UTF_8) + "')");
+								createTable(s);
+								Popup.showMessage("Registration successful!");
+								panel.dispose();
+							}
+//							System.out.println("Salt: " + Arrays.toString(salt));
+//							System.out.println("encPass: " + Arrays.toString(encPass));
+//							System.out.println("Pass: " + Arrays.toString(passwordField.getPassword()));
+//							System.out.println("Stored Salt: " + new String(salt,StandardCharsets.UTF_8) + "Why...");
+//							System.out.println("Stored Pass: " + new String(encPass, StandardCharsets.UTF_8) + "Why...");
+						}catch(Exception error){
+							Popup.errorMessage("Sorry, invalid username or password");
+						}
+					}
+				}
+		}
+		
+		private void createTable(Statement s)
+		{
+			try {
+				ResultSet rs = s.executeQuery("SELECT id FROM USERS");
+				rs.last();
+				int tableNumber = rs.getInt(1);
+				s.execute("CREATE TABLE user" + tableNumber + " ("
+						+ "id int not null auto_increment,"
+						+ "item varchar(20) tinytext not null,"
+						+ "cost double not null,"
+						+ "category smallint unsigned not null,"
+						+ "desciption text not null,"
+						+ "purchase_date date not null,"
+						+ "submittion_date timestamp default current_timestamp not null,"
+						+ "primary key(id)"
+						+ ")");
+			} catch (SQLException e) {
+				Popup.errorMessage(e);
+			}
+			
+		}
+	}
+	
+	class CancelRegistration implements ActionListener
+	{
+		public void actionPerformed(ActionEvent arg0) {
+			panel.dispose();
+		}
+	}
+}

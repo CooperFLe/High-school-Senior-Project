@@ -1,0 +1,25 @@
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+
+public class Tester {
+
+	public static void main(String[] args)
+	{
+		try {
+			
+			byte[] salt = PasswordEncryptionService.generateSalt();
+			byte[] pass = PasswordEncryptionService.getEncryptedPassword("Testing", salt);
+			System.out.println(PasswordEncryptionService.authenticate("Testing",pass, salt));
+			System.out.println("Salt byte[] : " + Arrays.toString(salt));
+			System.out.println("Salt String : " + new String(salt,StandardCharsets.UTF_8));
+			System.out.println("Salt byte[] : " + Arrays.toString(new String(salt,StandardCharsets.UTF_8).getBytes(StandardCharsets.UTF_8)));
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

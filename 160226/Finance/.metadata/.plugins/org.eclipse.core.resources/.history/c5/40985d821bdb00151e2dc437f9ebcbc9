@@ -1,0 +1,31 @@
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class GUI {
+	private JDialog userInput;
+	private JFrame frame;
+	private JPanel panel;
+	
+	public GUI()
+	{
+		setDialog();
+		setFrame();
+		setPanel();
+	}
+	
+	private void setDialog()
+	{
+		userInput = new JDialog();
+	}
+	
+	private void setFrame()
+	{
+		frame = new JFrame();
+	}
+	
+	private void setPanel()
+	{
+		panel = new JPanel();
+	}
+}

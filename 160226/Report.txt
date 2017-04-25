@@ -1,0 +1,9 @@
+This week, I worked on cleaning up my code. A lot of my methods were written terribly. I spent this week redesigning everything
+and writing everything again so that I can expand the program farther without making a mess of a program.
+
+I also set up a dedicated server computer at home so that I could continue working on my project from home. One result of this
+that I learned about password security. Specifically, the pros and cons of hashing a password and storing the hashed password on
+the server database. Once I finish rewriting my program, I'll work on getting rid of the SSL warning by configuring SSL on the server.
+
+"MySQL Program" is the Eclipse project directory before I started rewritting the code. "Finance" is the project where I am currently
+rewritting the "MySQL Program" code to be more manageable and readable.

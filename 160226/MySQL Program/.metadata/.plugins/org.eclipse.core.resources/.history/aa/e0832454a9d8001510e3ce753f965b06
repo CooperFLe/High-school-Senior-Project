@@ -1,0 +1,235 @@
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+
+import net.miginfocom.swing.MigLayout;
+//import java.util.Arrays;
+
+public class Connector 
+{
+	Connection conn;
+	Statement statement;
+	ResultSet result;
+	Login login;
+	JDialog dialog;
+	User user;
+	JDialog panel;
+	JTextField username;
+	JPasswordField password;
+	
+	public Connector(){
+		panel = new JDialog();
+		dialog = new JDialog();
+		dialog.setLocationRelativeTo(null);
+		dialog.setSize(175,150);
+		dialog.setLayout(new MigLayout("fill, wrap 1"));
+		JTextPane text = new JTextPane();
+		text.setText("Connecting to server (" + Data.getIpaddress() + ")");
+		text.setEditable(false);
+		 SimpleAttributeSet attribs = new SimpleAttributeSet();  
+		 StyleConstants.setAlignment(attribs , StyleConstants.ALIGN_CENTER);  
+		 text.setParagraphAttributes(attribs,true);
+		dialog.add(text,"align center");
+		conn = connect();
+		loginPanel();
+		try {
+			statement = conn.createStatement();
+		} catch (SQLException e) {
+			Popup.errorMessage(e);
+		}
+	}
+	
+	public Connector(Login login)
+	{	
+		panel = new JDialog();
+		dialog = new JDialog();
+		dialog.setLocationRelativeTo(null);
+		dialog.setSize(175,150);
+		dialog.setLayout(new MigLayout("fill, wrap 1"));
+		JTextPane text = new JTextPane();
+		text.setText("Connecting to server (" + Data.getIpaddress() + ")");
+		text.setEditable(false);
+		 SimpleAttributeSet attribs = new SimpleAttributeSet();  
+		 StyleConstants.setAlignment(attribs , StyleConstants.ALIGN_CENTER);  
+		 text.setParagraphAttributes(attribs,true);
+		dialog.add(text,"align center");
+		this.login = login;
+		login();
+	}
+	
+	void login() 
+	{
+		boolean loggedIn = false;
+		try
+		{
+			conn = connect();
+			statement = conn.createStatement();
+			if(!verifyUser(login))
+				Popup.errorMessage("Login failed");
+			else
+				loggedIn = true;
+		}
+		catch(Exception e)
+		{
+			Popup.errorMessage(e);
+			loginPanel();
+			login();
+		}
+		finally{
+			if(loggedIn = true)
+				panel.setVisible(false);
+		}
+	}
+	
+	Statement getStatement()
+	{
+		return statement;
+	}
+	
+	private boolean verifyUser(Login userLogin) {
+		String user = userLogin.getUser();
+		try {
+			result = statement.executeQuery("SELECT user FROM users");
+			while(result.next())
+			{
+				//System.out.println(result.getString(1));
+				if(result.getString(1).equalsIgnoreCase(user))
+					return verifyPass(userLogin);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	private boolean verifyPass(Login userLogin)
+	{
+		String salt = null;
+		String pass = null;
+		try {
+			result = statement.executeQuery("SELECT salt FROM users WHERE user = '" + userLogin.getUser() + "'");
+				result.next();
+				salt = result.getString(1);
+			result = statement.executeQuery("SELECT password FROM users WHERE user = '" + userLogin.getUser() + "'");
+				result.next();
+				pass = result.getString(1);
+//			Debugging hashing			
+//			System.out.println("Salt: " + Arrays.toString(salt.getBytes(StandardCharsets.UTF_8)));
+//			System.out.println("Pass: " + Arrays.toString(pass.getBytes(StandardCharsets.UTF_8)));
+
+				return PasswordEncryptionService.authenticate(userLogin.getPass(), 
+							pass.getBytes(StandardCharsets.UTF_8), salt.getBytes(StandardCharsets.UTF_8));
+				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	public void loginPanel()
+	{
+		user = new User();
+//		JFrame frame = new JFrame("Login");
+		panel = new JDialog();
+		panel.setLayout(new MigLayout("fillx,wrap 3"));
+		panel.add(new JLabel("Username", SwingConstants.RIGHT),"grow, align right");
+		username = new JTextField();
+		panel.add(username,"grow, span 2");
+		panel.add(new JLabel("Password", SwingConstants.RIGHT),"grow, align right");
+		password = new JPasswordField();
+		panel.add(password,"grow, span 2");
+		
+		JButton register = new JButton("Register");
+			register.setSize(new Dimension((int)(panel.getSize().getWidth()/4),(int)(panel.getSize().getHeight()*.3)));
+			register.addActionListener( new RegisterAction());
+		panel.add(register, "align center");
+	
+		JButton confirm = new JButton("Confirm");
+			confirm.setSize(new Dimension((int)(panel.getSize().getWidth()/4),(int)(panel.getSize().getHeight()*.3)));
+			confirm.addActionListener( new ConfirmAction());
+		panel.add(confirm, "align center");
+		panel.setLocationRelativeTo(null);
+		panel.setSize(350,150);
+		panel.setVisible(true);
+/*
+		JOptionPane.showOptionDialog(frame, "Testing", "Test",
+		        JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, buttons, null);
+	    JOptionPane.showMessageDialog(frame, panel, "Login", JOptionPane.PLAIN_MESSAGE);
+*/
+	}
+	
+	public void RegisterAction()
+	{
+		user.register();
+	}
+	
+	public void ConfirmAction()
+	{
+		login = new Login(username.getText(), password.getPassword());
+		login();
+	}
+
+	public Connection connect()
+	{
+		try
+		{
+			dialog.setVisible(true);
+			Connection c = DriverManager.getConnection("jdbc:mysql://" + Data.getIpaddress() + ":" + Data.getPortNum() + "/" 	
+														+ Data.getDatabase(),Data.getUsername(),Data.getPassword());
+
+			dialog.setVisible(false);
+			return c;
+		}catch(Exception e)
+		{
+			Popup.errorMessage(e);
+		}
+		
+		
+		return null;		
+	}
+	
+	public Connection getConn(){return conn;}
+	
+	class ConfirmAction implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			ConfirmAction();			
+		}
+	}
+	
+	class RegisterAction implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			RegisterAction();			
+		}
+	}
+}
+
