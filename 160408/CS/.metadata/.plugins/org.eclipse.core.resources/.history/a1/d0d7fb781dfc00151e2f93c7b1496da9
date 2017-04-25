@@ -1,0 +1,25 @@
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class GUI extends JFrame
+{
+	public GUI()
+	{
+		setSize(250,250);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setContentPane(new CPanel());
+		setTitle("Post Complete");
+		
+		setVisible(true);
+	}
+	
+	 
+	class CPanel extends JPanel
+	{
+		public CPanel()
+		{
+			setLayout(null);
+		}
+	}
+}

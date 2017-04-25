@@ -1,0 +1,127 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.Instant;
+import java.time.ZoneId;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+
+import net.miginfocom.swing.MigLayout;
+
+public class Client {
+	
+	//private Link 	server;
+	
+	public Client()
+	{
+		//server = new Link();
+		new TimeLog();
+	}
+	
+	class TimeLog extends GUI
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -7737550242306410590L;
+		
+		public TimeLog()
+		{
+			super();
+			setModal(true);
+			setAlwaysOnTop(true);
+		}
+		
+		@Override
+		public void verifyEmail(String email)
+		{
+			System.out.println(email);
+			String employee = email.substring(0,email.indexOf("@"));
+			timerLayout(employee, email);
+		}
+		
+		public void timerLayout(String e, String em)
+		{
+			setContentPane(new TimerLayout(e, em));
+			setTitle("Time Sheet");
+			//setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+			//TODO Create way to close program
+			pack();
+			setLocation(0,0);
+			setResizable(false);
+			setVisible(true);
+		}
+		
+		class TimerLayout extends JPanel
+		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 6911081452299105397L;
+			private JButton toggle;
+			private boolean running;
+			private String email;
+		
+			public TimerLayout(String employee, String email)
+			{
+				this.email = email;
+				setLayout(new MigLayout("fill, wrap 2"));
+					add(new JLabel("Hello, " + employee,JLabel.CENTER), "grow, span 2");
+				toggle = new JButton("Start");
+					toggle.addActionListener(new ToggleAction());
+					add(toggle,"grow, span 2");
+			}
+			
+			public void toggle()
+			{
+				
+				String time = Instant.now().atZone(ZoneId.of("CST",ZoneId.SHORT_IDS)).toString();
+				time = time.substring(time.indexOf("T")+1, time.indexOf(".",time.indexOf("T")));
+				
+				if(running)
+				{
+					if(checkEmail(JOptionPane.showInputDialog("Verify Email")))
+					{
+						toggle.setText("START");
+						System.out.println("OUT: " + time);
+				
+					}
+				}
+				else
+				{
+					if(checkEmail(JOptionPane.showInputDialog("Verify Email")));
+					{	
+						toggle.setText("STOP");
+						System.out.println("IN:  " + time);
+					}
+				}
+								
+				running = !running;
+			}
+			
+			public boolean checkEmail(String givenEmail)
+			{
+				if(email.equals(givenEmail))
+				{
+					return true;
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Incorrect email", "ERROR",JOptionPane.ERROR_MESSAGE);
+				}
+				return false;
+			}
+			
+			class ToggleAction implements ActionListener
+			{
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					toggle();
+				}				
+			}			
+		}
+	}
+}

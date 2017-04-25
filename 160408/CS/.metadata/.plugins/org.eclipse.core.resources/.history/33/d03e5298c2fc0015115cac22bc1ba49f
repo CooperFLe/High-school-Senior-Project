@@ -1,0 +1,43 @@
+import javax.swing.JPanel;
+
+public class Client {
+	
+	private Link 	server;
+	
+	public Client()
+	{
+		//server = new Link();
+		new TimeLog();
+	}
+	
+	class TimeLog extends GUI
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -7737550242306410590L;
+
+		public TimeLog()
+		{
+			super();
+		}
+		
+		@Override
+		public void verifyEmail(String email)
+		{
+			System.out.println(email);
+			
+			timerLayout();
+		}
+		
+		public void timerLayout()
+		{
+			setContentPane(new TimerLayout());
+		}
+		
+		class TimerLayout extends JPanel
+		{
+			
+		}
+	}
+}

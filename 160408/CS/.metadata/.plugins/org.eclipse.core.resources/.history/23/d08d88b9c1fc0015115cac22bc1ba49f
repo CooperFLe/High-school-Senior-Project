@@ -1,0 +1,47 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Client {
+	
+	private Link 	server;
+	
+	public Client()
+	{
+		//server = new Link();
+		new TimeLog();
+	}
+	
+	class TimeLog extends GUI
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -7737550242306410590L;
+
+		public TimeLog()
+		{
+			super();
+		}
+		
+		class ButtonOneAction implements ActionListener
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String email = getInput();
+			}
+			
+		}
+		
+		class ButtonTwoAction implements ActionListener
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Close program
+				
+			}
+			
+		}
+	}
+}

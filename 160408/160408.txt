@@ -1,0 +1,15 @@
+My dad asked me to create a program for his employees to use to clock into work and clock out.
+His requirements were that it was stupid simple for the employees to use and to make sure that
+they couldn't "accidently" clock in for someone else instead of themselves. In order to achive this,
+I opted for a simple GUI consisting of a single button to clock in and clock out. I hope to add a 
+timer to the GUI that shows them how long they have been working, but I am not sure if that would
+be okay with my dad as this program will actually be in use. I currently have it so that the window
+is always on top of the screen, but I may have to add an option to hide it for a set amount of time
+as clients often look off of the employee's computer in order to see specific information about thier
+policies. In order to achive this and implement the timer, I am going to need to find a way for the
+program to wait for a set amount of time without having to use a for loop or anything else of that 
+nature that could lead to poor performance or issues like not being able to interact with the program
+while it is trying to keep track of time.
+
+This should be a very simple program that I finish by next week and can return to trying to get my
+finance tracker to import data from the order history from Amazon.

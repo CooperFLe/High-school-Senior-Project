@@ -1,0 +1,46 @@
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import net.miginfocom.swing.MigLayout;
+
+public class GUI extends JFrame
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6411499808530678723L;
+
+
+	public GUI()
+	{
+		setSize(250,250);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setContentPane(new CPanel());
+		setTitle("Time Sheet");
+		
+		setVisible(true);
+	}
+	
+	 
+	class CPanel extends JPanel
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 8401792691722981275L;
+		private JLabel label;
+		private JTextField input;
+		
+		public CPanel()
+		{
+			setLayout(new MigLayout("2 2"));
+			label = new JLabel("Email: ");
+				add(label, "span 2");
+			input = new JTextField("example@winningagency.com");
+				add(input, "span 2");
+		}
+	}
+}
