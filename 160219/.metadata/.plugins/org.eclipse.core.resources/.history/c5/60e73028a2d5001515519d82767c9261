@@ -1,0 +1,152 @@
+import javax.swing.*;
+
+import net.miginfocom.layout.AC;
+import net.miginfocom.swing.MigLayout;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+class UIWindow extends JFrame
+{
+	public UIWindow()
+	{
+		new Model();
+	}
+	
+	class Model extends MyFrame
+	{
+		//	JTextArea output;
+
+		public Model()
+		{
+			buttonOne.setText("Button One");
+			buttonTwo.setText("Button Two");
+			buttonThree.setText("Button Three");
+		}
+
+		public void ButtonOneAction()
+		{
+			output.append("public void ButtonOneAction()\n");
+			output.append("{\n");
+			output.append("}\n");
+			output.append("\n");
+		}
+
+		public void ButtonTwoAction()
+		{
+			output.append("public void ButtonTwoAction()\n");
+			output.append("{\n");
+			output.append("}\n");
+			output.append("\n");
+		}
+
+		public void ButtonThreeAction()
+		{
+			output.append("public void ButtonThreeAction()\n");
+			output.append("{\n");
+			output.append("}\n");
+			output.append("\n");
+		}
+	}
+
+
+	class MyFrame extends JFrame
+	{
+		JTextArea 	output;
+		JButton   	buttonOne, buttonTwo, buttonThree;
+		JTextField 	input;
+		private Dimension 	screen = Toolkit.getDefaultToolkit().getScreenSize();
+		
+		public MyFrame()
+		{
+			//setSize(600,350);
+			setSize((int)screen.getWidth()/2,(int)screen.getHeight()/2);
+			setLocationRelativeTo(null);
+	  		setDefaultCloseOperation(3);
+	  		AC col = new AC();
+	  		col.size(""+(int)screen.getWidth()/2+"px");
+	  		AC row = new AC();
+	  		row.size(""+(int)screen.getHeight()/2+"px");
+			setContentPane( new MyPanel(col, row) );
+			setVisible(true);
+		}
+
+		class MyPanel extends JPanel
+		{
+			MyPanel(AC col, AC row)
+			{
+				super(new MigLayout("fillx,wrap 4"));
+	   			setBackground(new Color(125,140,115));
+	   			//setLayout(null);
+				output = new JTextArea();
+					output.setRows((int)(screen.getHeight()));
+					//output.setColumns(80);
+					//output.setSize((int)(screen.getWidth()*.75),(int)(screen.getHeight()*.75));
+					output.setEditable(false);
+					output.setFocusable(false);
+					output.setFont( new java.awt.Font("DialogInput", 0, 12));
+				JScrollPane scroll = new JScrollPane(output);
+					scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+				add(scroll, "grow,span 4 3");
+
+				buttonOne = new JButton();
+					buttonOne.setPreferredSize(new Dimension(110,25));
+					buttonOne.addActionListener( new ActionOneListener() );
+				add(buttonOne, "grow");
+
+				buttonTwo = new JButton();
+					buttonTwo.setPreferredSize(new Dimension(110,25));
+					buttonTwo.addActionListener( new ActionTwoListener() );
+				add(buttonTwo, "grow");
+
+				buttonThree = new JButton();
+					buttonThree.setPreferredSize(new Dimension(110,25));
+					buttonThree.addActionListener( new ActionThreeListener() );
+				add(buttonThree, "grow");
+
+				input = new JTextField("",10);
+					input.addActionListener( new InputFieldActionListener() );
+				add(input, "grow");
+			}
+		}
+
+		class ActionOneListener implements ActionListener {
+			public void actionPerformed(ActionEvent event) {
+				ButtonOneAction();
+		}}
+
+		public void ButtonOneAction()
+		{}
+
+		class ActionTwoListener implements ActionListener {
+			public void actionPerformed(ActionEvent event) {
+				ButtonTwoAction();
+		}}
+
+		public void ButtonTwoAction()
+		{}
+
+		class ActionThreeListener implements ActionListener {
+			public void actionPerformed(ActionEvent event) {
+				ButtonThreeAction();
+		}}
+
+		public void ButtonThreeAction()
+		{}
+
+		class InputFieldActionListener implements ActionListener {
+			public void actionPerformed(ActionEvent event) {
+				InputFieldAction();
+		}}
+
+		public void InputFieldAction()
+		{}
+	}
+
+
+
+}

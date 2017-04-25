@@ -1,0 +1,77 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Scanner;
+
+public class Connector 
+{
+	
+	public Connector()
+	{
+		
+		Window window = new Window();
+		try
+		{
+			Connection conn = getConn();
+			Statement statement = conn.createStatement();
+			ResultSet result = statement.executeQuery("select * from class");
+			while(result.next())
+			{
+				window.output.append(result.getString("name") + ", " + result.getString("level"));
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error: " + e);
+		}
+		
+	}
+	
+	public Connection getConn()
+	{
+		InputDialog input = new InputDialog();
+		String serverAddress = input.getResponse("Server address [10.111.53.160]: ");
+		String dataBase = input.getResponse("Database [temp]: ");
+		Scanner j = new Scanner(input.getLogin());
+		j.useDelimiter(",");
+		String user = j.next();
+		String pass = j.next();
+		
+		if(serverAddress.equals(""))
+			serverAddress = "10.111.53.160";
+		if(dataBase.equals(""))
+			dataBase = "temp";
+		if(user.equals(""))
+			user = "java";
+		if(pass.equals(""))
+			pass = "csiv";
+		j.close();
+		try
+		{
+			return DriverManager.getConnection("jdbc:mysql://" + serverAddress + ":3306/" + dataBase,user,pass);		
+		}catch(Exception e)
+		{
+			System.out.println("Error: " + e);
+		}
+		
+		
+		return null;		
+	}
+
+	class Window extends Model
+	{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6791503228233798055L;
+		
+		public Window()
+		{
+			buttonOne.setText("Login");
+		}
+
+	}
+}
+

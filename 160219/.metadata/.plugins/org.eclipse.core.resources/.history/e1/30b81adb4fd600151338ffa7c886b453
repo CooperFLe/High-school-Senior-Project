@@ -1,0 +1,60 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Scanner;
+
+public class Connector 
+{
+	
+	public Connector()
+	{
+		
+		new Model();
+		try
+		{
+			Connection conn = getConn();
+			Statement statement = conn.createStatement();
+			ResultSet result = statement.executeQuery("select * from class");
+			while(result.next())
+			{
+				System.out.println(result.getString("name") + ", " + result.getString("level"));
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error: " + e);
+		}
+		
+	}
+	
+	public Connection getConn()
+	{
+		InputDialog input = new InputDialog();
+		String serverAddress = input.getResponse("Server address[10.111.53.160]: ");
+		String dataBase = input.getResponse("Server address[10.111.53.160]: ");
+		String user = input.getResponse("Server address[10.111.53.160]: ");
+		String pass = input.getResponse("Server address[10.111.53.160]: ");
+		
+		if(serverAddress==null)
+			serverAddress = "10.111.53.160";
+		if(dataBase==null)
+			dataBase = "temp";
+		if(user==null)
+			user = "java";
+		if(pass==null)
+			pass = "csiv";
+		
+		try
+		{
+			return DriverManager.getConnection("jdbc:mysql://" + serverAddress + ":3306/" + dataBase,user,pass);		
+		}catch(Exception e)
+		{
+			System.out.println("Error: " + e);
+		}
+		
+		
+		return null;		
+	}
+}
+

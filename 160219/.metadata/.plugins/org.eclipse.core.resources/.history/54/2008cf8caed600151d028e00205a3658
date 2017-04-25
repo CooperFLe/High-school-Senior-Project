@@ -1,0 +1,89 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Scanner;
+
+public class Connector 
+{
+	Connection conn;
+	
+	public Connector()
+	{
+		
+		Window window = new Window();
+		try
+		{
+			window.output.setText("");
+			conn = getConn();
+			Statement statement = conn.createStatement();
+			ResultSet result = statement.executeQuery("select * from class");
+			while(result.next())
+			{
+				window.output.append(result.getString("name") + ", " + result.getString("level")+"\n");
+			}
+		}
+		catch(Exception e)
+		{
+			new Popup().errorMessage(e);
+		}
+		
+	}
+	
+	public Connection getConn()
+	{
+		Popup popup = new Popup();
+		String serverAddress = popup.getResponse("Server address [" + Data.getIpaddress() +"]: ");
+		String dataBase = popup.getResponse("Database [" + Data.getDatabase() + "]: ");
+		String login = popup.getLogin();
+		if(login.equals(","))
+			login = Data.getUsername()+","+Data.getPassword();
+		Scanner j = new Scanner(login);
+		j.useDelimiter(",");
+		String user = j.next();
+		String pass = j.next();
+		
+		if(serverAddress.equals(""))
+			serverAddress = Data.getIpaddress();
+		if(dataBase.equals(""))
+			dataBase = Data.getDatabase();
+		if(user.equals(" "))
+			user = Data.getUsername();
+		if(pass.equals(" "))
+			pass = Data.getPassword();
+		j.close();
+		try
+		{
+			return DriverManager.getConnection("jdbc:mysql://" + serverAddress + ":3306/" + dataBase,user,pass);		
+		}catch(Exception e)
+		{
+			new Popup().errorMessage(e);
+		}
+		
+		
+		return null;		
+	}
+
+	class Window extends Model
+	{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6791503228233798055L;
+		
+		public Window()
+		{
+			buttonOne.setText("Login");
+		}
+		
+		@Override
+		public void ButtonOneAction()
+		{
+			conn = getConn();
+		}
+		
+
+	}
+}
+
