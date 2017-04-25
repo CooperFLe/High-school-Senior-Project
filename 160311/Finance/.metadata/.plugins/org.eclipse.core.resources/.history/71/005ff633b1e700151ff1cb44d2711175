@@ -1,0 +1,10 @@
+class Finance {
+	private Connector 	conn;
+	
+	public Finance()
+	{
+		new GUI(new Connector());
+	}
+
+	
+}

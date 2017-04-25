@@ -1,0 +1,12 @@
+class Finance {
+	private GUI 		window;
+	private Connector 	conn;
+	
+	public Finance()
+	{
+		conn = new Connector();	
+		window = new GUI(conn);
+	}
+
+	
+}

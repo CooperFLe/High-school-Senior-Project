@@ -1,0 +1,10 @@
+I finished creating the add entry dialog and put in the MySQL command so that
+all entries can be added properly. To get the entry dialog working properly,
+I had to learn how to use a JComboBox and devise a way to store the categories
+inside of the database.
+
+You can now register a new user and be able to log in. There should no longer 
+be any issues with authenticating a user after they register. Currently working
+on a way for the program to display all entries in the database. After that, I 
+will need to sort the entries based on category, date purchased, date submitted,
+and price.

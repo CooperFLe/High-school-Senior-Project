@@ -1,0 +1,44 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Login {
+	private int id;
+	private String user;
+	private ArrayList<String> categories;
+	
+	public Login(String user)
+	{
+		this.setUser(user);
+		setCat(new ArrayList<String>());
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public void setCat(ArrayList<String> categories) {
+		this.categories = categories;
+	}
+	
+	public String[] getCat()
+	{
+		String[] cat = new String[categories.size()];
+		for(int x = 0 ; x < categories.size() ; x++)
+		{
+			cat[x] = categories.get(x);
+		}
+		return cat;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+}

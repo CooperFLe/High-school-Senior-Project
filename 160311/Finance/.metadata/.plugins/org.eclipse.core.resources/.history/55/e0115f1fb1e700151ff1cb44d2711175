@@ -1,0 +1,14 @@
+class Finance {
+	private GUI 		window;
+	private Connector 	conn;
+	
+	public Finance()
+	{
+		conn = new Connector();	
+		window = new GUI(conn);
+	
+		window.setOutput("This needs to be a list of recent entries.", false);
+	}
+
+	
+}
