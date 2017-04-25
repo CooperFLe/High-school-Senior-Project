@@ -1,0 +1,117 @@
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+//import java.util.Arrays;
+
+public class Connector 
+{
+	Connection conn;
+	Statement statement;
+	ResultSet result;
+	Login login;
+	
+	public Connector(){
+		conn = connect();
+		try {
+			statement = conn.createStatement();
+		} catch (SQLException e) {
+			Popup.errorMessage(e);
+		}
+	}
+	
+	public Connector(Login login)
+	{	
+		this.login = login;
+	}
+	
+	void login() 
+	{
+		try
+		{
+			conn = connect();
+			statement = conn.createStatement();
+			if(!verifyUser(login))
+				Popup.errorMessage("Login failed");
+		}
+		catch(Exception e)
+		{
+			Popup.errorMessage(e);
+		}		
+	}
+	
+	Statement getStatement()
+	{
+		return statement;
+	}
+	
+	private boolean verifyUser(Login userLogin) {
+		String user = userLogin.getUser();
+		try {
+			result = statement.executeQuery("SELECT user FROM users");
+			while(result.next())
+			{
+				//System.out.println(result.getString(1));
+				if(result.getString(1).equalsIgnoreCase(user))
+					return verifyPass(userLogin);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	private boolean verifyPass(Login userLogin)
+	{
+		String salt = null;
+		String pass = null;
+		try {
+			result = statement.executeQuery("SELECT salt FROM users WHERE user = '" + userLogin.getUser() + "'");
+				result.next();
+				salt = result.getString(1);
+			result = statement.executeQuery("SELECT password FROM users WHERE user = '" + userLogin.getUser() + "'");
+				result.next();
+				pass = result.getString(1);
+//			Debugging hashing			
+//			System.out.println("Salt: " + Arrays.toString(salt.getBytes(StandardCharsets.UTF_8)));
+//			System.out.println("Pass: " + Arrays.toString(pass.getBytes(StandardCharsets.UTF_8)));
+
+				return PasswordEncryptionService.authenticate(userLogin.getPass(), 
+							pass.getBytes(StandardCharsets.UTF_8), salt.getBytes(StandardCharsets.UTF_8));
+				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+
+	public Connection connect()
+	{
+		try
+		{
+			Popup.showMessage("Connecting to server...");
+			return DriverManager.getConnection("jdbc:mysql://" + Data.getIpaddress() + ":" + Data.getPortNum() + "/" 	
+														+ Data.getDatabase(),Data.getUsername(),Data.getPassword());
+		}catch(Exception e)
+		{
+			Popup.errorMessage(e);
+			login();
+		}
+		
+		
+		return null;		
+	}
+	
+	public Connection getConn(){return conn;}
+}
+

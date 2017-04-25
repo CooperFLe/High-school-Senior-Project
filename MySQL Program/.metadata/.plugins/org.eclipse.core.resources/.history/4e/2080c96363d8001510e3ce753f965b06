@@ -1,0 +1,21 @@
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+public class Tester {
+
+	public static void main(String[] args)
+	{
+		try {
+			
+			byte[] salt = PasswordEncryptionService.generateSalt();
+			byte[] pass = PasswordEncryptionService.getEncryptedPassword("Testing", salt);
+			System.out.println(PasswordEncryptionService.authenticate("Testing",pass, salt));
+			
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

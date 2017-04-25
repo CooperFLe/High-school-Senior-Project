@@ -1,0 +1,24 @@
+public class Driver{
+	public static void main(String[] args){
+		new Environment().run();
+	}
+}
+
+class Environment
+{
+	Connector connector;
+	Model model;
+	
+	public Environment() 
+	{
+		model = new Model();
+		connector = new Connector();
+		Data.setConn(connector);
+		//connector.login();
+	}
+	
+	void run()
+	{
+		
+	}
+}

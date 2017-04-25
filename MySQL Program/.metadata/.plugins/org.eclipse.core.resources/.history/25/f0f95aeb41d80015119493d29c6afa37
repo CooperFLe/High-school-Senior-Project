@@ -1,0 +1,114 @@
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+public class Popup
+{
+	static JFrame frame = new JFrame();
+	private Popup(){}
+	
+	public static void errorMessage(Exception e)
+	{
+		frame = new JFrame("Error");
+		if(e.toString().contains("java.sql.SQLException"))
+			JOptionPane.showMessageDialog(frame, "Error: Incorrect login", "Error", JOptionPane.WARNING_MESSAGE);
+		else
+			if(e.toString().contains("java.lang.NullPointerException"))
+				JOptionPane.showMessageDialog(frame, "Error: Login failed", "Error", JOptionPane.WARNING_MESSAGE);
+			else
+			if(e.toString().contains("com.mysql.jdbc.exceptions.jdbc4.CommunicationsException"))
+			{
+				JOptionPane.showMessageDialog(frame, "Error: Server could not be reached, terminating program", "Error", JOptionPane.WARNING_MESSAGE);
+				System.exit(1);
+			}
+			System.out.println(e);
+	}
+	
+	public static void showMessage(String message)
+	{
+		frame = new JFrame("Message");
+		JOptionPane.showMessageDialog(frame, message);	
+	}
+	
+	public static String getResponse(String prompt)
+	{
+	    frame = new JFrame("Input");
+	    return JOptionPane.showInputDialog(frame, prompt);   
+	}
+	
+	public static Login getLogin()
+	{
+		Login login;
+		JPanel panel = new JPanel(new BorderLayout(5, 5));
+		frame = new JFrame("Login");
+	    JPanel label = new JPanel(new GridLayout(0, 1, 2, 2));
+	    label.add(new JLabel("Username", SwingConstants.RIGHT));
+	    label.add(new JLabel("Password", SwingConstants.RIGHT));
+	    panel.add(label, BorderLayout.WEST);
+
+	    JPanel controls = new JPanel(new GridLayout(0, 1, 2, 2));
+	    JTextField username = new JTextField();
+	    controls.add(username);
+	    JPasswordField password = new JPasswordField();
+	    controls.add(password);
+	    panel.add(controls, BorderLayout.CENTER);
+	    login = new Login(username.getText(), password.getPassword());
+	    Data.setUserCred(login);
+	    JOptionPane.showMessageDialog(frame, panel, "Login", JOptionPane.QUESTION_MESSAGE);
+	    return login;
+	}
+	
+	public static void setting()
+	{
+		JPanel panel = new JPanel(new BorderLayout(5, 5));
+		frame = new JFrame("Settings");
+	    JPanel label = new JPanel(new GridLayout(6, 1, 2, 2));
+	    label.add(new JLabel("Login", SwingConstants.RIGHT));
+	    label.add(new JLabel("Password", SwingConstants.RIGHT));
+	    label.add(new JLabel("Database IP Address", SwingConstants.RIGHT));
+	    label.add(new JLabel("Database Name", SwingConstants.RIGHT));
+	    label.add(new JLabel("Database Username", SwingConstants.RIGHT));
+	    label.add(new JLabel("Database Password", SwingConstants.RIGHT));
+	    panel.add(label, BorderLayout.WEST);
+
+	    JPanel controls = new JPanel(new GridLayout(6, 1, 2, 2));
+	    JTextField uusername = new JTextField(Data.getUserCred().getUser());
+	    controls.add(uusername);
+	    JPasswordField upassword = new JPasswordField(Data.getUserCred().getPass());
+	    controls.add(upassword);
+	    JTextField address = new JTextField(Data.getIpaddress());
+	    controls.add(address);
+	    JTextField database = new JTextField(Data.getDatabase());
+	    controls.add(database);
+	    JTextField username = new JTextField(Data.getUsername());
+	    controls.add(username);
+	    JPasswordField password = new JPasswordField(Data.getPassword());
+	    controls.add(password);
+	    panel.add(controls, BorderLayout.CENTER);
+
+	    JOptionPane.showMessageDialog(frame, panel, "Settings", JOptionPane.OK_CANCEL_OPTION, null);
+	    
+	    Data.getUserCred().setUser(uusername.getText());
+	    char[] upass = upassword.getPassword();
+	    String upassword1 = "";
+	    for(char x: upass)
+	    	upassword1 = upassword1 + x;
+	    Data.getUserCred().setPass(upassword1);
+	    
+	    Data.setUsername(username.getText());
+	    char[] pass = password.getPassword();
+	    String password1 = "";
+	    for(char x: pass)
+	    	password1 = password1 + x;
+	    Data.setPassword(password1);
+	    Data.setIpaddress(address.getText());
+	    Data.setDatabase(database.getText());
+	}
+}

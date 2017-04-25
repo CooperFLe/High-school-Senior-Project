@@ -1,0 +1,28 @@
+import javax.swing.JOptionPane;
+
+public class Driver{
+	public static void main(String[] args){
+		new Environment().run();
+	}
+}
+
+class Environment
+{
+	Connector connector;
+	Model model;
+	
+	public Environment() 
+	{
+		String[] buttons = {};
+		model = new Model();
+		JOptionPane.showOptionDialog(model, "Testing", "Test",
+		        JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, buttons, null);
+		connector = new Connector(model.getLogin());
+		connector.login();
+	}
+	
+	void run()
+	{
+		
+	}
+}

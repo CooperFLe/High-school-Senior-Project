@@ -1,0 +1,101 @@
+import java.util.Arrays;
+
+public class Data 
+{
+	private static String		ipaddress; 	
+	private static String		portNum;		
+	private static String		database; 	
+	private static String		username;	
+	private static String		password; 	
+	private static Login		userCred;   
+	private static Connector	conn;       
+	
+	private  int user_id;
+	
+	public Data()
+	{
+		ipaddress 	= "73.76.67.116";
+		portNum		= "3737";        
+		database 	= "finance";     
+		username 	= "finance";     
+		password 	= "csiv";                     
+	}
+	
+	public  String getIpaddress() {
+		return ipaddress;
+	}
+	public  void setIpaddress(String ipaddress) {
+		Data.ipaddress = ipaddress;
+	}
+	public  String getDatabase() {
+		return database;
+	}
+	public  void setDatabase(String database) {
+		Data.database = database;
+	}
+	public  String getUsername() {
+		return username;
+	}
+	public  void setUsername(String username) {
+		Data.username = username;
+	}
+	public  String getPassword() {
+		return password;
+	}
+	public  void setPassword(String password) {
+		Data.password = password;
+	}
+	public  Login getUserCred() {
+		return userCred;
+	}
+	public  void setUserCred(Login userCred) {
+		Data.userCred = userCred;
+	}
+	public  String getPortNum() {
+		return portNum;
+	}
+	public  void setPortNum(String portNum) {
+		Data.portNum = portNum;
+	}
+
+	public  int getUser_id() {
+		return user_id;
+	}
+
+	public  void setUser_id(int user_id) {
+		this.user_id = user_id;
+	}
+
+	public  Connector getConn() {
+		return conn;
+	}
+
+	public  void setConn(Connector conn) {
+		Data.conn = conn;
+	}
+}
+
+class Login
+{
+	private String user;
+	private String pass;
+	
+	public Login(String u, char[] p)
+	{
+		user = u;
+		pass = Arrays.toString(p);
+	}
+	
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
+	}
+	public String getPass() {
+		return pass;
+	}
+	public void setPass(String pass) {
+		this.pass = pass;
+	}
+}

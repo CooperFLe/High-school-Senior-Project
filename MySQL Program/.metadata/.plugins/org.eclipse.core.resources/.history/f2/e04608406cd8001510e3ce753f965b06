@@ -1,0 +1,52 @@
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+
+import javax.swing.JOptionPane;
+
+public class Tester {
+
+	public static void main(String[] args)
+	{
+		//testEncryption();
+		testMessageDialog();
+	}
+	
+	@SuppressWarnings("unused")
+	private static void testMessageDialog()
+	{
+		String[] buttons = {};
+
+	    int rc = JOptionPane.showOptionDialog(null, "Question ?", "Confirmation",
+	        JOptionPane.PLAIN_MESSAGE, 0, null, buttons, null);
+
+	    System.out.println(rc);
+	}
+	
+	@SuppressWarnings("unused")
+	private static void testEncryption()
+	{
+		try {
+			byte[] salt = PasswordEncryptionService.generateSalt();
+			byte[] pass = PasswordEncryptionService.getEncryptedPassword("Testing", new String(salt,StandardCharsets.UTF_8).getBytes(StandardCharsets.UTF_8));
+			System.out.println("Salt byte[] : " + Arrays.toString(salt));
+			System.out.println("Salt String : " + new String(salt,StandardCharsets.UTF_8));
+				String salter = new String(salt,StandardCharsets.UTF_8);
+			System.out.println("Salt byte[] : " + Arrays.toString(salter.getBytes(StandardCharsets.UTF_8)));
+				byte[] sa = salter.getBytes(StandardCharsets.UTF_8);
+			System.out.println("Pass byte[] : " + Arrays.toString(pass));
+			System.out.println("Pass String : " + new String(pass,StandardCharsets.UTF_8));
+				String passer = new String(pass,StandardCharsets.UTF_8);
+			System.out.println("pass byte[] : " + Arrays.toString(passer.getBytes(StandardCharsets.UTF_8)));
+				byte[] pa = passer.getBytes(StandardCharsets.UTF_8);
+			System.out.println(PasswordEncryptionService.authenticate("Testing",pa, sa));
+			
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

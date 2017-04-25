@@ -1,0 +1,109 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+public class Popup
+{
+	static JFrame frame = new JFrame();
+	private Popup(){}
+	
+	public static void errorMessage(Exception e)
+	{
+		frame = new JFrame("Error");
+		if(e.toString().equals("java.sql.SQLException"))
+			JOptionPane.showMessageDialog(frame, "Error: Incorrect login");
+		else
+			if(e.toString().equals("java.lang.NullPointerException"))
+				JOptionPane.showMessageDialog(frame, "Error: Login failed");
+			else
+			System.out.println(e);
+	}
+	
+	public static String getResponse(String prompt)
+	{
+	    frame = new JFrame("Input");
+	    return JOptionPane.showInputDialog(frame, prompt);   
+	}
+	
+	public static Login getLogin()
+	{
+		JPanel panel = new JPanel(new BorderLayout(5, 5));
+		frame = new JFrame("Login");
+	    JPanel label = new JPanel(new GridLayout(0, 1, 2, 2));
+	    label.add(new JLabel("Username", SwingConstants.RIGHT));
+	    label.add(new JLabel("Password", SwingConstants.RIGHT));
+	    panel.add(label, BorderLayout.WEST);
+
+	    JPanel controls = new JPanel(new GridLayout(0, 1, 2, 2));
+	    JTextField username = new JTextField();
+	    controls.add(username);
+	    JPasswordField password = new JPasswordField();
+	    controls.add(password);
+	    panel.add(controls, BorderLayout.CENTER);
+	    Data.setUserCred(new Login(username.getText(), password.getPassword()));
+	    JOptionPane.showMessageDialog(frame, panel, "Login", JOptionPane.QUESTION_MESSAGE);
+	    return new Login(username.getText(), password.getPassword());
+	}
+	
+	public static void setting()
+	{
+		JPanel panel = new JPanel(new BorderLayout(5, 5));
+		panel.setBackground(new Color(125,140,115));
+		frame = new JFrame("Settings");
+	    JPanel label = new JPanel(new GridLayout(0, 1, 8, 2));
+	    label.add(new JLabel("USER SETTINGS", SwingConstants.CENTER));
+	    label.add(new JLabel("Login", SwingConstants.RIGHT));
+	    label.add(new JLabel("Password", SwingConstants.RIGHT));
+	    label.add(new JLabel("DATABASE SETTINGS", SwingConstants.CENTER));
+	    label.add(new JLabel("IP Address", SwingConstants.RIGHT));
+	    label.add(new JLabel("Database Name", SwingConstants.RIGHT));
+	    label.add(new JLabel("Username", SwingConstants.RIGHT));
+	    label.add(new JLabel("Password", SwingConstants.RIGHT));
+	    panel.add(label, BorderLayout.WEST);
+
+	    JPanel controls = new JPanel(new GridLayout(0, 1, 8, 2));
+	    JTextField back = new JTextField();
+	    	back.setBackground(new Color(125,140,115));
+	    controls.add(back);
+	    JTextField uusername = new JTextField(Data.getUserCred().getUser());
+	    controls.add(uusername);
+	    JPasswordField upassword = new JPasswordField(Data.getUserCred().getPass());
+	    controls.add(upassword);
+	    controls.add(back);
+	    JTextField address = new JTextField(Data.getIpaddress());
+	    controls.add(address);
+	    JTextField database = new JTextField(Data.getDatabase());
+	    controls.add(database);
+	    JTextField username = new JTextField(Data.getUsername());
+	    controls.add(username);
+	    JPasswordField password = new JPasswordField(Data.getPassword());
+	    controls.add(password);
+	    panel.add(controls, BorderLayout.CENTER);
+
+	    JOptionPane.showMessageDialog(frame, panel, "Settings", JOptionPane.OK_CANCEL_OPTION);
+	    
+	    Data.getUserCred().setUser(uusername.getText());
+	    char[] upass = upassword.getPassword();
+	    String upassword1 = "";
+	    for(char x: upass)
+	    	upassword1 = upassword1 + x;
+	    Data.getUserCred().setPass(upassword1);
+	    
+	    Data.setUsername(username.getText());
+	    char[] pass = password.getPassword();
+	    String password1 = "";
+	    for(char x: pass)
+	    	password1 = password1 + x;
+	    Data.setPassword(password1);
+	    Data.setIpaddress(address.getText());
+	    Data.setDatabase(database.getText());
+	}
+}
